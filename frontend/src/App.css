@@ -1,0 +1,175 @@
+/* --- Global Styles & Variables --- */
+:root {
+  --primary-color: #007bff;  /* A nice blue */
+  --light-gray: #f8f9fa;
+  --gray: #6c757d;
+  --dark-gray: #343a40;
+  --border-color: #dee2e6;
+  --card-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+body {
+  font-family: var(--font-family);
+  background-color: var(--light-gray);
+  color: var(--dark-gray);
+  margin: 0;
+  padding: 2rem;
+}
+
+/* --- Main App Container --- */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: var(--card-shadow);
+}
+
+h1 {
+  color: var(--dark-gray);
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h2, h3, h4 {
+  color: var(--dark-gray);
+}
+
+/* --- Re-usable Button Style --- */
+.btn {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: center;
+  text-decoration: none;
+  color: var(--primary-color);
+  background-color: transparent;
+  border: 2px solid var(--primary-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn:hover {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn-primary {
+  background-color: var(--primary-color);
+  color: #ffffff;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3; /* Darker blue on hover */
+  border-color: #0056b3;
+}
+
+
+/* --- Project List Page --- */
+.project-list h2 {
+  border-bottom: 2px solid var(--border-color);
+  padding-bottom: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+/* --- Project Card Component --- */
+.project-card {
+  background: #ffffff;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease;
+}
+
+.project-card:hover {
+  box-shadow: var(--card-shadow);
+  transform: translateY(-2px);
+}
+
+.project-card h3 {
+  margin-top: 0;
+  color: var(--primary-color);
+}
+
+.project-card p {
+  color: var(--gray);
+  margin-bottom: 1.5rem;
+}
+
+.project-card .btn {
+  font-size: 0.9rem;
+  padding: 0.5rem 1rem;
+}
+
+
+/* --- Project Detail Page --- */
+.project-detail {
+  padding-top: 1rem;
+}
+
+.project-detail h2 {
+  color: var(--primary-color);
+  margin-bottom: 0.5rem;
+}
+
+.project-detail h3 {
+  font-weight: 600;
+  color: var(--gray);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.project-detail p {
+  line-height: 1.6;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+
+.project-detail h4 {
+  font-weight: 700;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 5px;
+  margin-top: 2rem;
+}
+
+.project-detail ul {
+  list-style-type: none;
+  margin-top: 10px;
+  padding-left: 0;
+}
+
+.project-detail li {
+  display: inline-block;
+  background-color: var(--light-gray);
+  border: 1px solid var(--border-color);
+  color: var(--dark-gray);
+  padding: 0.4rem 0.8rem;
+  border-radius: 20px;
+  margin-right: 8px;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.project-detail .btn-primary {
+  margin-top: 2rem;
+  font-size: 1.1rem;
+}
+
+/* Back link */
+.project-detail a {
+  text-decoration: none;
+  color: var(--primary-color);
+  font-weight: 600;
+  display: inline-block;
+  margin-bottom: 1rem;
+}
+
+.project-detail a:hover {
+  text-decoration: underline;
+}

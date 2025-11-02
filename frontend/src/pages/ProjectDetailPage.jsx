@@ -39,7 +39,9 @@ function ProjectDetailPage() {
         ))}
       </ul>
       
-      <button className="btn btn-primary">Apply Now</button>
+      <Link to={`/apply/${id}`} className="btn btn-primary" style={{color: "white"}}>Apply Now</Link>
+
+
     </div>
   );
 }

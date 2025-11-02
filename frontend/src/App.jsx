@@ -12,6 +12,8 @@ import StudentProfilePage from './pages/StudentProfilePage.jsx';
 import ViewApplicationPage from './pages/ViewApplicationPage.jsx';
 import LoginPage from './pages/LoginPage.jsx';
 import './App.css'; 
+import ApplyPage from './pages/ApplyPage.jsx';
+
 
 function App() {
   return (
@@ -23,6 +25,7 @@ function App() {
           {/* Public Routes (as before) */}
           <Route path="/" element={<ProjectListPage />} />
           <Route path="/project/:id" element={<ProjectDetailPage />} />
+          <Route path="/apply/:projectId" element={<ApplyPage />} />
 
           {/* --- STUDENT PAGES (AFTER LOGIN) --- */}
           <Route path="/student/dashboard" element={<StudentDashboardPage />} />

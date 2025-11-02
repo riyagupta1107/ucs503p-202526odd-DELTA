@@ -303,3 +303,52 @@ h2, h3, h4 {
     background-color: #0056b3; 
     border-color: #0056b3;
 }
+
+/* Apply Page Styling */
+.form-container {
+  max-width: 650px;
+  margin: auto;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: var(--card-shadow);
+}
+
+.form-title {
+  text-align: center;
+  margin-bottom: 1.8rem;
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.styled-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.styled-form input,
+.styled-form select {
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 5px;
+}
+
+.submit-btn {
+  grid-column: span 2;
+  width: 100%;
+  padding: 0.8rem;
+  margin-top: 1rem;
+  font-size: 1.1rem;
+}

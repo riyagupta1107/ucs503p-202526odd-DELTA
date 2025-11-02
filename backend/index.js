@@ -4,6 +4,8 @@ import cors from 'cors';
 import { projects } from './db.js'; // Using our mock data
 import professorRoutes from './professorRoutes.js';
 import  studentRoutes  from './studentRoutes.js';
+import applyRoutes from "./routes/apply.js";
+
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -11,6 +13,9 @@ const port = process.env.PORT || 3001;
 // Middleware
 app.use(cors()); // Allows your React app to talk to this API
 app.use(express.json());
+
+app.use("/api", applyRoutes);
+
 
 // --- API ROUTES ---
 

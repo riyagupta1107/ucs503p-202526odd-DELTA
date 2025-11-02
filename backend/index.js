@@ -2,6 +2,8 @@
 import express from 'express';
 import cors from 'cors';
 import { projects } from './db.js'; // Using our mock data
+import professorRoutes from './professorRoutes.js';
+import  studentRoutes  from './studentRoutes.js';
 
 const app = express();
 const port = process.env.PORT || 3001;
@@ -27,6 +29,12 @@ app.get('/api/projects/:id', (req, res) => {
   }
 });
 
+// --- NEW Student API ROUTES ---
+app.use('/api/student', studentRoutes); // 
+
+// --- Existing Professor API ROUTES ---
+app.use('/api/professor', professorRoutes);
+
 // --- User/Admin Routes (To be added later) ---
 // POST /api/projects (Admin only)
 // PUT /api/projects/:id (Admin only)
@@ -36,6 +44,7 @@ app.get('/api/projects/:id', (req, res) => {
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
+
 
 // Export the app for Vercel
 export default app;

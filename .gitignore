@@ -27,3 +27,6 @@ backend/uploads/
 
 # Mac junk
 .DS_Store
+
+
+.env.local

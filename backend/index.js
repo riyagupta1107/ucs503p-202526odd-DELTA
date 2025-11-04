@@ -10,6 +10,10 @@ import applyRoutes from "./routes/apply.js";
 const app = express();
 const port = process.env.PORT || 3001;
 
+app.use(cors({
+  origin: 'https://ucs503p-202526odd-delta-59ezsvo1p-riya-guptas-projects-13223453.vercel.app/' 
+}));
+
 // Middleware
 app.use(cors()); // Allows your React app to talk to this API
 app.use(express.json());

@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/:path*",
+        "destination": "https://ucs503p-202526odd-delta-backend.onrender.com/api/:path*"
+      }
+    ]
+  }
+  

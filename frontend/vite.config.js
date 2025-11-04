@@ -1,17 +1,17 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
+    // Keep the essential proxy configuration for the backend
     proxy: {
-      // This forwards any request starting with /api
-      // to your backend server running on port 3001
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:3001', 
         changeOrigin: true,
-      }
-    }
-  }
-})
+        secure: false, 
+      },
+    },
+  },
+  // 🚫 Remove the 'esbuild' block entirely
+});

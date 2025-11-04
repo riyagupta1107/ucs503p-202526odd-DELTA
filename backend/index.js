@@ -1,4 +1,4 @@
-// api/index.js
+// backend/index.js
 import express from 'express';
 import cors from 'cors';
 import { projects } from './db.js'; // Using our mock data

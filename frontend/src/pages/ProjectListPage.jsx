@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProjectCard from '../components/ProjectCard';
+import NavBar from '../components/NavBar';
 
 function ProjectListPage() {
   const [projects, setProjects] = useState([]);
@@ -29,8 +30,9 @@ function ProjectListPage() {
   // TODO: Add Search Bar and Filtering logic here
 
   return (
-    <div className="project-list">
-      <h2>Available Projects</h2>
+    
+    <div className="p-2 flex flex-col gap-10">
+      <NavBar />
       {projects.map(project => (
         <ProjectCard key={project._id} project={project} />
       ))}

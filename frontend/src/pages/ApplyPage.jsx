@@ -48,24 +48,25 @@ function ApplyPage() {
   };
 
   return (
-    <div className="form-container">
-      <h2 className="form-title">Apply for Research Project</h2>
+    <div className="flex justify-center items-center min-h-screen bg-gradient-to-b from-violet-50 to-violet-100 font-inter px-4">
+      <div className="bg-white shadow-md border border-gray-100 rounded-2xl p-8 w-full max-w-2xl">
+      <h2 className="text-3xl font-bold text-gray-800 text-center mb-10">Apply for Research Project</h2>
 
-      <form onSubmit={handleSubmit} className="styled-form">
+      <form onSubmit={handleSubmit} className="space-y-5">
 
         <div className="form-group">
-          <label>Name</label>
-          <input name="name" required onChange={handleChange} />
+          <label className="block font-semibold text-gray-700 mb-1">Name</label>
+          <input name="name" required onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-darkViolet outline-none" />
         </div>
 
-        <div className="form-group">
-          <label>Roll Number</label>
-          <input name="rollNumber" required onChange={handleChange} />
+        <div>
+          <label className="block font-semibold text-gray-700 mb-1">Roll Number</label>
+          <input name="rollNumber" required onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-darkViolet outline-none" />
         </div>
 
-        <div className="form-group">
-          <label>Gender</label>
-          <select name="gender" required onChange={handleChange}>
+        <div>
+          <label className="block font-semibold text-gray-700 mb-1">Gender</label>
+          <select name="gender" required onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-darkViolet outline-none">
             <option value="">Select...</option>
             <option>Male</option>
             <option>Female</option>
@@ -73,42 +74,43 @@ function ApplyPage() {
           </select>
         </div>
 
-        <div className="form-group">
-          <label>Accommodation Required</label>
-          <select name="accommodation" required onChange={handleChange}>
+        <div>
+          <label className="block font-semibold text-gray-700 mb-1">Accommodation Required</label>
+          <select name="accommodation" required onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-darkViolet outline-none">
             <option value="">Select...</option>
             <option>Yes</option>
             <option>No</option>
           </select>
         </div>
 
-        <div className="form-group">
-          <label>Email</label>
-          <input type="email" name="email" required onChange={handleChange} />
+        <div>
+          <label className="block font-semibold text-gray-700 mb-1">Email</label>
+          <input type="email" name="email" required onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-darkViolet outline-none" />
         </div>
 
-        <div className="form-group">
-          <label>Phone</label>
-          <input type="tel" name="phone" required onChange={handleChange} />
+        <div>
+          <label className="block font-semibold text-gray-700 mb-1">Phone</label>
+          <input type="tel" name="phone" required onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-darkViolet outline-none" />
         </div>
 
-        <div className="form-group">
-          <label>Branch</label>
-          <input name="branch" required onChange={handleChange} />
+        <div>
+          <label className="block font-semibold text-gray-700 mb-1">Branch</label>
+          <input name="branch" required onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-darkViolet outline-none" />
         </div>
 
-        <div className="form-group">
-          <label>Year</label>
-          <input name="year" required onChange={handleChange} />
+        <div>
+          <label className="block font-semibold text-gray-700 mb-1">Year</label>
+          <input name="year" required onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-darkViolet outline-none" />
         </div>
 
-        <div className="form-group">
-          <label>Resume (PDF)</label>
-          <input type="file" accept=".pdf" name="resume" required onChange={handleChange} />
+        <div>
+          <label className="block font-semibold text-gray-700 mb-1">Resume (PDF)</label>
+          <input type="file" accept=".pdf" name="resume" required onChange={handleChange} className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-darkViolet outline-none mb-4" />
         </div>
 
-        <button className="btn btn-primary submit-btn">Submit Application</button>
+        <button className="text-darkViolet hover:text-violet bg-violet hover:bg-darkViolet w-full h-14 rounded-xl shadow-md font-bold text-lg border border-gray-300 transition duration-300">Submit Application</button>
       </form>
+      </div>
     </div>
   );
 }

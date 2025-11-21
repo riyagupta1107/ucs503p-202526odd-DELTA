@@ -16,12 +16,7 @@ const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(cors({
-  origin: [
-    "http://localhost:5173",  // React dev server
-    "http://localhost:3000",
-    "https://ucs503p-202526odd-delta.vercel.app",
-    "https://ucs503p-202526odd-delta-59ezsvo1p-riya-guptas-projects-13223453.vercel.app"
-  ],
+  origin: "*",
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
 }));

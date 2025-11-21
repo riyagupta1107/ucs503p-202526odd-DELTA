@@ -15,6 +15,9 @@ function ApplyPage() {
   const [resume, setResume] = useState(null);
   const [accommodation, setAccommodation] = useState("");
 
+
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
   // Load Firestore user profile
   useEffect(() => {
     onAuthStateChanged(auth, async (user) => {
@@ -47,7 +50,7 @@ function ApplyPage() {
     form.append("resume", resume);
 
     try {
-      await axios.post("/api/apply", form, {
+      await axios.post(`${API_BASE_URL}/api/apply`, form, {
         headers: { "Content-Type": "multipart/form-data" },
       });
 

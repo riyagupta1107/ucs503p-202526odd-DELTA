@@ -21,6 +21,8 @@ function RegisterPage() {
 
   const [errors, setErrors] = useState({});
 
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
@@ -67,7 +69,7 @@ function RegisterPage() {
 
         // --- Save to MongoDB for professors ---
         if (formData.role === "professor") {
-          const profRes =  await axios.post("/api/professor/register", {
+          const profRes =  await axios.post(`${API_BASE_URL}/api/professor/register`, {
             firstName: formData.firstName,
             lastName: formData.lastName,
             email: formData.email

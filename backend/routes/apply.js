@@ -1,7 +1,7 @@
-// backend/routes/apply.js
 import express from "express";
 import multer from "multer";
 import path from "path";
+import fs from "fs"; // 👈 CRITICAL FIX: Import fs
 
 import Student from "../models/Student.js";
 import Project from "../models/Project.js";
@@ -10,15 +10,23 @@ import { appendToSheet } from "../googleSheets.js";
 
 const router = express.Router();
 
+// ---------------------------------------------------------
+// 1. Ensure 'uploads' directory exists
+// ---------------------------------------------------------
 const uploadDir = "uploads";
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir);
 }
-// Multer for resume uploads
+
+// ---------------------------------------------------------
+// 2. Configure Multer
+// ---------------------------------------------------------
 const storage = multer.diskStorage({
-  destination: (_, __, cb) => cb(null, "uploads/"),
+  destination: (_, __, cb) => cb(null, uploadDir), // Use the variable
   filename: (_, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
+    // Unique filename to prevent overwrites
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1E9);
+    cb(null, uniqueSuffix + "-" + file.originalname.replace(/\s+/g, '_'));
   }
 });
 const upload = multer({ storage });
@@ -26,9 +34,7 @@ const upload = multer({ storage });
 // █████ POST /api/apply █████
 router.post("/", upload.single("resume"), async (req, res) => {
   try {
-
-    console.log("FULL BODY:", req.body);
-    console.log("FILE:", req.file);
+    console.log("Received Application Request");
 
     const {
       name,
@@ -41,7 +47,9 @@ router.post("/", upload.single("resume"), async (req, res) => {
       projectId
     } = req.body;
 
-    if (!rollNumber) return res.status(400).json({ error: "rollNumber is missing" });
+    if (!rollNumber) {
+      return res.status(400).json({ error: "rollNumber is missing" });
+    }
 
     const project = await Project.findById(projectId);
     if (!project) {
@@ -53,18 +61,26 @@ router.post("/", upload.single("resume"), async (req, res) => {
     const firstname = nameParts[0] || "";
     const lastname = nameParts.slice(1).join(" ");
 
+    // ---------------------------------------------------------
+    // 3. Save to MongoDB (Student & Application)
+    // ---------------------------------------------------------
+    const studentUpdate = {
+      rollNo: rollNumber,
+      firstname,
+      lastname,
+      email,
+      ...(gender && { gender }),
+      ...(phone && { phone }),
+      ...(branch && { branch }),
+    };
+
+    if (req.file) {
+      studentUpdate.resumeUrl = `/uploads/${req.file.filename}`;
+    }
+
     const student = await Student.findOneAndUpdate(
       { rollNo: rollNumber },
-      {
-        rollNo: rollNumber,
-        firstname,
-        lastname,
-        gender,
-        email,
-        phone,
-        branch,
-        resumeUrl: req.file ? `/uploads/${req.file.filename}` : ""
-      },
+      studentUpdate,
       { upsert: true, new: true }
     );
 
@@ -75,30 +91,42 @@ router.post("/", upload.single("resume"), async (req, res) => {
       status: "pending"
     });
 
-    const row = [
-      `${firstname} ${lastname}`,
-      rollNumber,
-      gender,
-      email,
-      phone,
-      branch,
-      req.file?.originalname || "No resume",
-      new Date().toLocaleString(),
-      application._id.toString()
-    ];
+    // ---------------------------------------------------------
+    // 4. Append to Google Sheet (Safe Mode)
+    // ---------------------------------------------------------
+    // We use try-catch here so if Sheets fails (due to missing creds on Render),
+    // the user still gets a "Success" message for the database part.
+    try {
+      const row = [
+        `${firstname} ${lastname}`,
+        rollNumber,
+        gender,
+        email,
+        phone,
+        branch,
+        req.file?.originalname || "No resume",
+        new Date().toLocaleString(),
+        application._id.toString()
+      ];
+      await appendToSheet(`Project_${projectId}`, row);
+    } catch (sheetErr) {
+      console.error("⚠️ Google Sheets Error (Ignored):", sheetErr.message);
+      // Do NOT res.status(500) here. We want to continue.
+    }
 
-    await appendToSheet(`Project_${projectId}`, row);
-
-    // 5️⃣ Response
+    // ---------------------------------------------------------
+    // 5. Send Success Response
+    // ---------------------------------------------------------
     res.json({
-      message: "Application saved",
+      message: "Application saved successfully",
       applicationId: application._id
     });
 
   } catch (error) {
-    console.error(error);
+    console.error("Apply Route Fatal Error:", error);
     res.status(500).json({
-      error: "Something went wrong while processing application"
+      error: "Something went wrong while processing application",
+      details: error.message
     });
   }
 });

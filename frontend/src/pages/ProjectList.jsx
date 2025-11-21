@@ -11,12 +11,14 @@ function ProjectList() {
   const [searchType, setSearchType] = useState("title");
   const [searchQuery, setSearchQuery] = useState("");
 
+  const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+
   useEffect(() => {
     // Fetch projects from our backend API
     const fetchProjects = async () => {
       try {
         // This will automatically point to your /api/projects route
-        const response = await axios.get('http://localhost:5000/api/projects');
+        const response = await axios.get(`${API_BASE_URL}/api/projects`);
         console.log('Data received from API:', response.data);
         setProjects(response.data);
       } catch (error) {

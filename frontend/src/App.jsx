@@ -3,15 +3,16 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // Import Pages
 import ProjectListPage from './pages/ProjectListPage';
+import ProjectList from './pages/ProjectList.jsx';
 import Home from './pages/Home.jsx';
-import ProfessorDashboardPage from './pages/ProfessorDashboardPage'; 
-import StudentDashboardPage from './pages/StudentDashboardPage.jsx';
-import MyApplicationsPage from './pages/MyApplicationsPage.jsx';
-import StudentProfilePage from './pages/StudentProfilePage.jsx';
-import ViewApplicationPage from './pages/ViewApplicationPage.jsx';
-import LoginPage from './pages/LoginPage.jsx';
-import RegisterPage from './pages/RegisterPage.jsx';
-import ApplyPage from './pages/ApplyPage.jsx';
+import StudentDashboard from './pages/Student/StudentDashboard.jsx';
+import ProfilePage from './pages/ProfilePage.jsx';
+
+import ProfessorDashboard from './pages/Professor/ProfessorDashboard.jsx';
+
+import LoginPage from './pages/Authentication/LoginPage.jsx';
+import RegisterPage from './pages/Authentication/RegisterPage.jsx';
+import ApplyPage from './pages/Student/ApplyPage.jsx';
 
 // Import Layout
 
@@ -24,20 +25,17 @@ function App() {
         
         
           <Route path="/" element={<Home />} />
-          <Route path="/projects" element={<ProjectListPage />} /> {/* Added this since you had it before */}
+          <Route path="/projects" element={<ProjectListPage />} /> 
+          <Route path='/projects1' element={<ProjectList />} />
+          <Route path='/profile' element={<ProfilePage />} />
           
           <Route path="/apply/:projectId" element={<ApplyPage />} />
           
           {/* --- STUDENT PAGES (AFTER LOGIN) --- */}
-          <Route path="/student/dashboard" element={<StudentDashboardPage />} />
-          <Route path="/student/applications" element={<MyApplicationsPage />} />
-          <Route path="/student/profile" element={<StudentProfilePage />} />
-          
+          <Route path="/student/dashboard" element={<StudentDashboard />} />
+
           {/* --- PROFESSOR PAGES (AFTER LOGIN) --- */}
-          <Route path="/professor/dashboard" element={<ProfessorDashboardPage />} />
-          <Route path="/professor/project/:projectId/applications" element={<ViewApplicationPage />} />
-          <Route path="/professor/project/new" element={<h2>Create New Project Form</h2>} />
-          <Route path="/professor/project/edit/:id" element={<h2>Edit Project Form</h2>} />
+          <Route path="/professor/dashboard" element={<ProfessorDashboard />} />
 
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />

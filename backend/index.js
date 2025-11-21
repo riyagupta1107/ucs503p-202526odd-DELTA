@@ -1,58 +1,49 @@
 // backend/index.js
 import express from 'express';
+import dotenv from 'dotenv';
 import cors from 'cors';
-import { projects } from './db.js'; // Using our mock data
-import professorRoutes from './professorRoutes.js';
-import  studentRoutes  from './studentRoutes.js';
-import applyRoutes from "./routes/apply.js";
+import { connectDB } from "./db.js";
 
+import professorRoutes from "./routes/professorRoutes.js";
+import studentRoutes from "./routes/studentRoutes.js";
+import applyRoutes from "./routes/apply.js";
+import projectRoutes from "./routes/projectRoutes.js";
+
+dotenv.config();
+await connectDB();
 
 const app = express();
 const port = process.env.PORT || 3001;
 
 app.use(cors({
-  origin: 'https://ucs503p-202526odd-delta-59ezsvo1p-riya-guptas-projects-13223453.vercel.app' 
+  origin: [
+    "http://localhost:5173",  // React dev server
+    "http://localhost:3000",
+    "https://ucs503p-202526odd-delta-59ezsvo1p-riya-guptas-projects-13223453.vercel.app"
+  ],
+  credentials: true
 }));
 
-// Middleware
+
 app.use(express.json());
-
-app.use("/api", applyRoutes);
-
 
 // --- API ROUTES ---
 
-// GET all projects
-app.get('/api/projects', (req, res) => {
-  res.json(projects);
-});
+// Apply API (student application form)
+app.use("/api/apply", applyRoutes);
 
-// GET a single project by ID
-app.get('/api/projects/:id', (req, res) => {
-  const project = projects.find(p => p._id === req.params.id);
-  if (project) {
-    res.json(project);
-  } else {
-    res.status(404).json({ message: 'Project not found' });
-  }
-});
+// Projects API (MongoDB)
+app.use("/api/projects", projectRoutes);
 
-// --- NEW Student API ROUTES ---
-app.use('/api/student', studentRoutes); // 
+// Student routes
+app.use("/api/student", studentRoutes);
 
-// --- Existing Professor API ROUTES ---
-app.use('/api/professor', professorRoutes);
+// Professor routes
+app.use("/api/professor", professorRoutes);
 
-// --- User/Admin Routes (To be added later) ---
-// POST /api/projects (Admin only)
-// PUT /api/projects/:id (Admin only)
-// POST /api/projects/:id/apply (Student only)
-
-// Start the server
+// Start server
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
 
-
-// Export the app for Vercel
 export default app;

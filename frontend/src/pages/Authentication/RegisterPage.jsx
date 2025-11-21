@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
-import { auth,db } from '../firebase';
+import { auth,db } from '../../firebase';
 import { doc, setDoc } from 'firebase/firestore';
+import axios from 'axios';
 
 function RegisterPage() {
   const navigate = useNavigate();
 
-  const [formData, setFromData] = useState({
+  const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
-    phone: '',
+    rollNo: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -22,7 +23,7 @@ function RegisterPage() {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFromData((prev) => ({
+    setFormData((prev) => ({
       ...prev,
       [name] : type === 'checkbox' ? checked : value
     }));
@@ -35,7 +36,7 @@ function RegisterPage() {
 
     if (!formData.firstName.trim()) validationErrors.firstName = 'First name is required';
     if (!formData.lastName.trim()) validationErrors.lastName = 'Last name is required';
-    if (!formData.phone.trim()) validationErrors.phone = 'Phone number is required';
+    if (!formData.rollNo.trim()) validationErrors.rollNo = 'Roll number is required';
     if (!formData.email.trim()) validationErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) validationErrors.email = 'Invalid email';
 
@@ -60,13 +61,27 @@ function RegisterPage() {
         
         console.log("Writing to Firestore...", user.uid, formData);
 
+        
+
+        let pidValue = ""
+
+        // --- Save to MongoDB for professors ---
+        if (formData.role === "professor") {
+          const profRes =  await axios.post("/api/professor/register", {
+            firstName: formData.firstName,
+            lastName: formData.lastName,
+            email: formData.email
+          });
+          pidValue = profRes.data.pid;
+        }
         // save user details in Firestore
         await setDoc(doc(db, "users", user.uid), {
           firstName: formData.firstName || "",
           lastName: formData.lastName || "",
-          phone: formData.phone || "",
+          rollNo: formData.rollNo || "",
           email: formData.email || "",
           role: formData.role || "",
+          pid: pidValue || null,
           createdAt: new Date().toISOString(),
         });
 
@@ -132,17 +147,17 @@ function RegisterPage() {
             {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
           </div>
           <div>
-            <label htmlFor="phone" className="block mb-2 text-sm font-medium text-gray-900 font-inter">Phone number</label>
+            <label htmlFor="rollNo" className="block mb-2 text-sm font-medium text-gray-900 font-inter">Roll number</label>
             <input
               type="tel"
-              id="phone"
-              name='phone'
-              value={formData.phone}
+              id="rollNo"
+              name='rollNo'
+              value={formData.rollNo}
               onChange={handleChange}
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-darkViolet focus:border-darkViolet block w-full p-2.5"
               required
             />
-            {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+            {errors.rollNo && <p className="text-red-500 text-sm">{errors.rollNo}</p>}
           </div>
           {/* Add more fields for Email, Password, Confirm Password within the grid or below */}
           {/* Example for Email within grid: */}

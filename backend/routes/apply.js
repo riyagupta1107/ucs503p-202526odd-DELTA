@@ -1,33 +1,101 @@
+// backend/routes/apply.js
 import express from "express";
 import multer from "multer";
+import path from "path";
+
+import Student from "../models/Student.js";
+import Project from "../models/Project.js";
+import Application from "../models/Application.js";
 import { appendToSheet } from "../googleSheets.js";
 
 const router = express.Router();
-const upload = multer({ dest: "uploads/" });
 
-router.post("/apply", upload.single("resume"), async (req, res) => {
+// Multer for resume uploads
+const storage = multer.diskStorage({
+  destination: (_, __, cb) => cb(null, "uploads/"),
+  filename: (_, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  }
+});
+const upload = multer({ storage });
+
+// █████ POST /api/apply █████
+router.post("/", upload.single("resume"), async (req, res) => {
   try {
-    const sheetName = `Project_${req.body.projectId}`;
+
+    console.log("FULL BODY:", req.body);
+    console.log("FILE:", req.file);
+
+    const {
+      name,
+      rollNumber,
+      gender,
+      accommodation,
+      email,
+      phone,
+      branch,
+      projectId
+    } = req.body;
+
+    if (!rollNumber) return res.status(400).json({ error: "rollNumber is missing" });
+
+    const project = await Project.findById(projectId);
+    if (!project) {
+      return res.status(400).json({ error: "Project not found ❌" });
+    }
+
+    // Split name into first + last
+    const nameParts = name.trim().split(" ");
+    const firstname = nameParts[0] || "";
+    const lastname = nameParts.slice(1).join(" ");
+
+    const student = await Student.findOneAndUpdate(
+      { rollNo: rollNumber },
+      {
+        rollNo: rollNumber,
+        firstname,
+        lastname,
+        gender,
+        email,
+        phone,
+        branch,
+        resumeUrl: req.file ? `/uploads/${req.file.filename}` : ""
+      },
+      { upsert: true, new: true }
+    );
+
+    const application = await Application.create({
+      student: student._id,
+      project: project._id,
+      accommodation,
+      status: "pending"
+    });
 
     const row = [
-      req.body.name,
-      req.body.rollNumber,
-      req.body.gender,
-      req.body.accommodation,
-      req.body.email,
-      req.body.phone,
-      req.body.branch,
-      req.body.year,
-      req.file?.originalname || "N/A",
+      `${firstname} ${lastname}`,
+      rollNumber,
+      gender,
+      email,
+      phone,
+      branch,
+      req.file?.originalname || "No resume",
       new Date().toLocaleString(),
+      application._id.toString()
     ];
 
-    await appendToSheet(sheetName, row);
+    await appendToSheet(`Project_${projectId}`, row);
 
-    res.json({ message: "Application stored in Google Sheet ✅" });
-  } catch (e) {
-    console.error(e);
-    res.status(500).json({ error: "Failed to store in Google Sheet ❌" });
+    // 5️⃣ Response
+    res.json({
+      message: "Application saved",
+      applicationId: application._id
+    });
+
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({
+      error: "Something went wrong while processing application"
+    });
   }
 });
 

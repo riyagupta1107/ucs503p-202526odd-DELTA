@@ -23,7 +23,7 @@ function ProjectCard({ project }) {
       <div>
         <h3 className='text-xl font-bold text-gray-800'>{project.title}</h3>
         <p className='text-lg text-gray-600 font-semibold mb-3'>
-          Professor: {project.professor}
+          Professor: {project.professorName}
         </p>
       </div>
 

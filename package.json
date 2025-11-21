@@ -3,6 +3,7 @@
     "axios": "^1.13.1",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "mongodb": "^7.0.0",
     "react-router-dom": "^7.9.5"
   }
 }

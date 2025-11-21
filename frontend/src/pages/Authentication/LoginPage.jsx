@@ -1,9 +1,8 @@
-import React, {use, useState} from 'react';
+import React, {useState} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { auth } from '../firebase';
-
-
+import { auth,db } from '../../firebase';
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -29,9 +28,25 @@ function LoginPage() {
     setError('');
 
     try {
-      await signInWithEmailAndPassword(auth,formData.email,formData.password);
+      const userCredential = await signInWithEmailAndPassword(auth,formData.email,formData.password);
+
       alert("Login Successful!");
-      navigate('/projects');
+
+      const user = userCredential.user;
+      const snap = await getDoc(doc(db,"users",user.uid));
+
+      if (snap.exists()) {
+        const role = snap.data().role;
+
+        if (role === "professor") {
+          navigate("/projects1");
+        } else if (role === "student") {
+          navigate("/projects");
+        } else {
+          navigate("/projects");
+        }
+      }
+      
     } catch(err) {
       console.error(err);
       if (err.code === 'auth/user-not-found') {

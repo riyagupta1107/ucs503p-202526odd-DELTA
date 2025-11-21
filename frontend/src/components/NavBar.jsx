@@ -1,61 +1,82 @@
 // src/components/NavBar.jsx
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getFirestore, doc, getDoc } from "firebase/firestore";
 
 function NavBar() {
-  // NOTE: This mock logic must be replaced with real state management later.
-  const isLoggedIn = true; // Set to true to see the dashboard links
-  const userRole = 'Student'; 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [role, setRole] = useState(""); // "student" or "professor"
 
-  const baseLinkClasses = 'text-lg text-darkViolet hover:text-violet transition duration-300 font-inter rounded-full p-3 w-full text-center bg-violet hover:bg-darkViolet';
-  const buttonClasses = 'px-4 py-2 text-white rounded-lg transition duration-300 shadow-md font-inter';
+  const auth = getAuth();
+  const db = getFirestore();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        setIsLoggedIn(false);
+        setRole("");
+        return;
+      }
+
+      setIsLoggedIn(true);
+
+      const snap = await getDoc(doc(db, "users", user.uid));
+      if (snap.exists()) {
+        setRole(snap.data().role); // student | professor
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
+
+    const baseLinkClasses =
+    "text-lg text-darkViolet hover:text-violet transition duration-300 font-inter rounded-full p-3 w-fit text-center bg-violet hover:bg-darkViolet";
+    const buttonClasses = 'px-4 py-2 text-white rounded-lg transition duration-300 shadow-md font-inter';
 
   return (
-    <nav className='flex justify-end items-center px-8 py-4 h-[80px]'>
-      
-      {/* 1. Logo/Home Link (Always visible, links to public projects) */}
-      
-      
-      {/* 2. Main Navigation Links */}
-      <div className='flex items-center space-x-6 font-semibold text-xl'>
-      {isLoggedIn && userRole === 'Student' && (
-            <>
-                <Link to="/student/dashboard" className={baseLinkClasses}>
-                    Home
-                </Link>
-            </>
+    <nav className="flex justify-end items-center px-8 py-4 h-[80px]">
+
+      <div className="flex items-center space-x-6 font-semibold text-xl">
+        
+        {/* HOME -- ROLE SPECIFIC */}
+        {isLoggedIn && role === "student" && (
+          <Link to="/student/dashboard" className={baseLinkClasses}>
+            Home
+          </Link>
         )}
-        {/* PUBLIC LINKS (Always Visible) */}
-        <Link to="/projects" className={baseLinkClasses}>Projects</Link>
-        <Link to="/researchers" className={baseLinkClasses}>Researchers</Link>
 
-        {/* --- DYNAMIC ROLE-SPECIFIC LINKS --- */}
-        
-        {/* 2A. Links for Professors */}
-        
-        
-        {/* 2B. Links for Students */}
-        
+        {isLoggedIn && role === "professor" && (
+          <Link to="/professor/dashboard" className={baseLinkClasses}>
+            Home
+          </Link>
+        )}
 
-        {/* 3. Authentication/Profile Link */}
-        {isLoggedIn ? (
-            // If logged in, show a generic profile link (or button to trigger logout)
-            <Link to={userRole === 'Student' ? "/student/profile" : "/professor/profile"} className='ml-4 text-sm px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-300'>
-                My Account
-            </Link>
+        {/* PROJECTS -- ROLE SPECIFIC */}
+        {role === "professor" ? (
+          <Link to="/projects1" className={baseLinkClasses}>
+            Projects
+          </Link>
         ) : (
-            // If logged out, show Login button
-            <Link 
-                to="/login" 
-                className='ml-4 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-100 transition duration-300'
-            >
-                Login
-            </Link>
+          <Link to="/projects" className={baseLinkClasses}>
+            Projects
+          </Link>
         )}
-        
+
+        {/* PROFILE (same for both roles) */}
+        {isLoggedIn ? (
+          <Link to="/profile" className={baseLinkClasses}>
+            My Account
+          </Link>
+        ) : (
+          <Link to="/login" className={baseLinkClasses}>
+            Login
+          </Link>
+        )}
+
       </div>
     </nav>
-  )
+  );
 }
 
 export default NavBar;

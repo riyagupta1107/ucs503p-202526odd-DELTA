@@ -10,6 +10,10 @@ import { appendToSheet } from "../googleSheets.js";
 
 const router = express.Router();
 
+const uploadDir = "uploads";
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
 // Multer for resume uploads
 const storage = multer.diskStorage({
   destination: (_, __, cb) => cb(null, "uploads/"),
